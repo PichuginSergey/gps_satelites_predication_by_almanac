@@ -4,6 +4,7 @@
 #include "gpsAlmanac.h"
 #include "time.h"
 #include "service.h"
+#include "file.h"
 
 	const double 		GpsAlm::GRAV_CONSTANT_GPS = 3.986005E14;
 	const double		GpsAlm::WGS84_OE =  7.2921151467E-5;
@@ -108,8 +109,10 @@ void GpsAlm::sv_pos_predication(const Time& cur_time, Satellite& sat) const {
 }
 
 void GpsAlm::read_alm(const std::string& name){
-	std::ifstream	in(name.c_str());
-	if (in == NULL ) {
+
+	InputFile<std::ifstream> in(name.c_str());
+
+	if (!in) {
 		std::string s = "Can not open file " + name;
 		throw std::exception(s.c_str());
 	}
@@ -136,5 +139,4 @@ void GpsAlm::read_alm(const std::string& name){
 		A->m0 *= Pi;
 		A->vflg = 1;
 	}
-	in.close();
 }

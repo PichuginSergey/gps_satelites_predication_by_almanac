@@ -2,6 +2,7 @@
 #include <cmath>
 #include "glonassAlmanac.h"
 #include "service.h"
+#include "file.h"
 
 /* AlmanacGLN's static const */
 const double GlonassAlm::EARTH_RADIUS_GLON =	6378136.0;			
@@ -14,8 +15,9 @@ const double GlonassAlm::PZ90_OE = 7.292115E-5;
 
 void GlonassAlm::read_alm(const std::string& name) {
 	
-	std::ifstream	in(name.c_str());
-	if (in == NULL ) 
+	InputFile<std::ifstream> in(name.c_str());
+
+	if (!in) 
 	{
 		std::string s = "Can not open file " + name;
 		throw std::exception(s.c_str());
@@ -41,7 +43,6 @@ void GlonassAlm::read_alm(const std::string& name) {
 		A->vflg = 1;
 		++idx;
 	}
-	in.close();
 }
 
 void GlonassAlm::sv_pos_predication(const Time& cur_time, Satellite& sat) const {

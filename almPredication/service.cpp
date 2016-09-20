@@ -2,8 +2,10 @@
 #include <ctime>
 #include <cmath>
 #include <fstream>
+#include <memory>
 #include "satellite.h"
 #include "service.h"
+#include "file.h"
 #include "time.h"
 
 const double Pi = 3.141592653589793;
@@ -37,18 +39,19 @@ void get_current_time(Time& t) {
 
 /* Read current position of the users from file */
 void get_cur_pos (const std::string& file, Position& pos) { 		
-		
-	std::ifstream	in(file.c_str());
-	if (in == NULL ) {
+	
+	InputFile<std::ifstream> in(file.c_str());
+	if (!in) {
 		std::string s = "Can not open file " + file;
 		throw std::exception(s.c_str());
 	}
-		
+
 	signed int temp (0);
 	in >> temp; pos.setX(temp);
 	in >> temp; pos.setY(temp);
 	in >> temp; pos.setZ(temp);
-	in.close();
+
+
 
 }
 
