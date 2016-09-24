@@ -13,12 +13,12 @@ const double Pi = 3.141592653589793;
 void pred_sv_param(const Position& pos, 
 				   const Time& cur_time, 
 				   const Almanac& alm, 
-				   GNSS& sat) {
+				   GNSS& satellites) {
 	
-	for (size_t i = 0; i < sat.size(); ++i) {
-		alm.sv_pos_predication(cur_time, sat[i]);
-		if (sat[i].coord.vflg)
-			sv_angles(pos, sat[i]);
+	for (auto& sat : satellites) {
+		alm.sv_pos_predication(cur_time, sat);
+		if (sat.coord.vflg)
+			sv_angles(pos, sat);
 	}
 }
 
@@ -50,8 +50,6 @@ void get_cur_pos (const std::string& file, Position& pos) {
 	in >> temp; pos.setX(temp);
 	in >> temp; pos.setY(temp);
 	in >> temp; pos.setZ(temp);
-
-
 
 }
 
