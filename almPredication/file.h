@@ -5,9 +5,14 @@
 template <typename T>
 class FileGuardian {
 public:
-	FileGuardian(const std::string& name) : file(name) {}
+	explicit FileGuardian(const std::string& name) : file(name) {}
 	~FileGuardian() { file.close(); }
 	operator bool() { return static_cast<bool>(file); }
+	
+	FileGuardian(const FileGuardian&) = delete;
+	FileGuardian& operator=(const FileGuardian&) = delete;
+	FileGuardian(FileGuardian&&) = delete;
+	FileGuardian& operator=(const FileGuardian&&) = delete;
 
 protected:
 	T file;
@@ -17,7 +22,7 @@ template <typename T>
 class InputFile : public FileGuardian<T> {
 
 public:
-	InputFile(const std::string& name) : FileGuardian(name) {}
+	explicit InputFile(const std::string& name) : FileGuardian(name) {}
 
 	bool eof() const { return file.eof(); }
 
@@ -32,7 +37,7 @@ template <typename T>
 class OutputFile : public FileGuardian<T> {
 
 public:
-	OutputFile(const std::string& name) : FileGuardian(name) {}
+	explicit OutputFile(const std::string& name) : FileGuardian(name) {}
 
 	template <typename U>
 	T& operator<<(U& val) {
