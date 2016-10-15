@@ -15,10 +15,14 @@ int main(int argc, char* argv[]) {
 	get_current_time(cur_time);
 
 	GpsAlm almGps;
+	ReadYumaGpsAlm    readYumaGpsAlm;
+	almGps.setStrategy(&readYumaGpsAlm);
 	almGps.read_alm("MCCT_160825.agp");
 	SatGps sat_gps;
 
 	GlonassAlm almGln;
+	ReadGlnAlm    readGlnAlm;
+	almGln.setStrategy(&readGlnAlm);
 	almGln.read_alm("MCCT_160825.agl");
 	SatGlonass sat_gln;
 
