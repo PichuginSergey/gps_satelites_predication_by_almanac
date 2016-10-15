@@ -1,6 +1,7 @@
 #ifndef FILE_H_
 #define FILE_H_
 #include <string>
+#include <fstream>
 
 template <typename T>
 class FileGuardian {
@@ -22,7 +23,7 @@ template <typename T>
 class InputFile : public FileGuardian<T> {
 
 public:
-	explicit InputFile(const std::string& name) : FileGuardian(name) {}
+	explicit InputFile(const std::string& name) : FileGuardian<T>(name) {}
 
 	bool eof() const { return file.eof(); }
 
@@ -37,7 +38,7 @@ template <typename T>
 class OutputFile : public FileGuardian<T> {
 
 public:
-	explicit OutputFile(const std::string& name) : FileGuardian(name) {}
+	explicit OutputFile(const std::string& name) : FileGuardian<T>(name) {}
 
 	template <typename U>
 	T& operator<<(U& val) {
