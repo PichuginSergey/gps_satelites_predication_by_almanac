@@ -6,7 +6,7 @@
 class Satellite {
 
 public:
-	Satellite(int id) : prn(id) {}
+	explicit Satellite(int id) : prn(id) {}
 	int get_prn() const {return prn;}
 	Coordinate		coord;
 	Velocity		vel;
@@ -19,9 +19,9 @@ private:
 class GNSS {
 
 public:
-	GNSS (size_t size) {
+	explicit GNSS (size_t size) {
 		for (size_t i = 0; i < size; ++i)
-			sat.push_back(i+1);
+			sat.push_back(Satellite(i+1));
 	}
 	size_t size() const {return sat.size();}
 	Satellite& operator[](size_t idx) {return sat[idx];}

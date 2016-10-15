@@ -5,6 +5,8 @@
 class Time {
 
 public:
+	Time() : m_year(0), m_month(0), m_day(0), m_week_day(0),
+		m_hour(0), m_min(0), m_sec(0) {}
 	unsigned int get_year(void) const { return m_year; }
 	unsigned int get_month(void) const { return m_month; }
 	unsigned int get_day(void) const { return m_day; }
