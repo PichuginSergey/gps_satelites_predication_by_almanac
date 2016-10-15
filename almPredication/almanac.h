@@ -3,7 +3,7 @@
 #include <string> 
 #include "satellite.h" 
 #include "position.h"
-#include "time.h"
+#include "sv_time.h"
 
 class Almanac {
 
