@@ -25,8 +25,8 @@ class GlonassAlm : public Almanac {
 
 public :
 	GlonassAlm() : alm(SatGlonass::NUM_GLONASS_SAT) {}
-	void sv_pos_predication(const Time& cur_time, Satellite& sat) const;
-	void read_alm(const std::string& name);
+	void sv_pos_predication(const Time& cur_time, Satellite& sat) const override;
+	void read_alm(const std::string& name) override;
 
 	static const double	EARTH_RADIUS_GLON;	// m
 	static const double GRAV_CONSTANT_GLON;	// m^3/s^2

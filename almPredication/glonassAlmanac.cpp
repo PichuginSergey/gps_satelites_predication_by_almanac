@@ -1,4 +1,4 @@
-#include <fstream>
+#include <stdexcept>
 #include <cmath>
 #include "glonassAlmanac.h"
 #include "service.h"
@@ -60,12 +60,11 @@ void GlonassAlm::sv_pos_predication(const Time& cur_time, Satellite& sat) const 
 	int prn = sat.get_prn();
 	const AlmanacGlon*	Glon = &alm[prn-1];		
 
-	ik = I0 + Glon->delta_i;								// Наклонение орбиты спутника с учетом поправки
-	Tdr = T0 + Glon->deltaT;									// Драконический период с учетом поправки
-	n = (double)(2.0*(Pi)/(double)Tdr);						// Cреднее движение НКА
-	a = pow(GRAV_CONSTANT_GLON/(double)(n*n),1.0/(double)3.0);	// Большая полуось орбиты НКА, м
+	ik = I0 + Glon->delta_i;								
+	Tdr = T0 + Glon->deltaT;									
+	n = (double)(2.0*(Pi)/(double)Tdr);						
+	a = pow(GRAV_CONSTANT_GLON/(double)(n*n),1.0/(double)3.0);	
 
-	/* Внесение поправок на несферичность Земли */
 	sik = sin(ik);
 	cik = cos(ik);
 
@@ -77,9 +76,8 @@ void GlonassAlm::sv_pos_predication(const Time& cur_time, Satellite& sat) const 
 
 	ww_p = Glon->w + w_*D_t;
 
-	ok = Glon->omega0 + (l_ - PZ90_OE)*D_t;					// Долгота восходящего узла, рад
+	ok = Glon->omega0 + (l_ - PZ90_OE)*D_t;					
 
-	/* Решение уравнения Кеплера методом Ньютона (расчет эксцентрической аномалии) */
 	e = Glon->ecc;
 	Ep = 2.0*atan(tan(ww_p/2.0)*sqrt((1.0-e)/(double)(1.0+e)));
 
@@ -96,7 +94,6 @@ void GlonassAlm::sv_pos_predication(const Time& cur_time, Satellite& sat) const 
 		Ek = E;
 	}
 
-	/* Определение вектора состояния НКА в орбитальной системе координат */
 	sek = sin(Ek);
 	cek = cos(Ek);
 	x1o = a*(cek - e);
@@ -104,7 +101,6 @@ void GlonassAlm::sv_pos_predication(const Time& cur_time, Satellite& sat) const 
 	xo1 = - (n*a*sek/(1.0 - e*cek ));
 	xo2 = (n*a*sqrt(1 -e*e)*cek/((1.0 - e*cek)));
 
-	/* Расчет ортов орбитальной системы координат в системе координат */
 	swp = sin(ww_p);
 	cwp = cos(ww_p);
 	sok = sin(ok);
@@ -118,7 +114,6 @@ void GlonassAlm::sv_pos_predication(const Time& cur_time, Satellite& sat) const 
 	e0y2 = - swp*sok + cwp*cok*cik;
 	e0z2 = cwp*sik ;
 
-	/* Преобразование вектора состояний НКА из орбитальной СК в СК координат ПЗ-90 */
 	sat.coord.xs = x1o*e0x1 + x2o*e0x2;
 	sat.coord.ys = x1o*e0y1 + x2o*e0y2;
 	sat.coord.zs = x1o*e0z1 + x2o*e0z2;

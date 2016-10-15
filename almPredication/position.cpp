@@ -4,12 +4,9 @@ void Position::XYZ2BLH(void) const {
 				
 		double e, ee, b, p, tetha, stet, ctet,lat, sinLat, numerator, denumenat, N;
 
-        /* Квадрат второго эксцентриситета */
 		e = get_ecc()*get_ecc();
-		/* Квадрат второго эксцентриситета */
 		ee = e/(1.0 - e);
 
-		/* Малая полуось земного сфероида */
 		b = get_major_radius()*sqrt(1 - e);
 
 		p = sqrt(m_X * m_X + m_Y * m_Y);

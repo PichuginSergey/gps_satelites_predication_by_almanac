@@ -2,6 +2,7 @@
 #include <ctime>
 #include <cmath>
 #include <fstream>
+#include <stdexcept>
 #include <memory>
 #include "satellite.h"
 #include "service.h"
@@ -43,7 +44,7 @@ void get_cur_pos (const std::string& file, Position& pos) {
 	InputFile<std::ifstream> in(file.c_str());
 	if (!in) {
 		std::string s = "Can not open file " + file;
-		throw std::exception(s.c_str());
+		throw std::runtime_error(s.c_str());
 	}
 
 	signed int temp (0);

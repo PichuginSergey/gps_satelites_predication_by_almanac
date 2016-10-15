@@ -24,7 +24,7 @@
 		Angle() : vflg(false) {}
 		bool		vflg;
 		double		elv;				// Elevation angle, rad.				
-		double		azi;				// Àzimuth, rad.	
+		double		azi;				// Azimuth, rad.	
 	};
 
 class Position {

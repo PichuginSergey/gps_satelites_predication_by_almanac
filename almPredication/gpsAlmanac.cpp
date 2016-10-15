@@ -31,18 +31,14 @@ void GpsAlm::sv_pos_predication(const Time& cur_time, Satellite& sat) const {
     a = a * a;
 	e = A->e;
 	
-	/* Вычисление (в секундах) разности между временем заложения данных альманаха и текущим моментом времени (времени GPS) */
     signed int r = (wk - A->refweek)*SECONDS_A_WEEK;
 	Tk = r + sec - A->toa;
 
-    /* Расчет среднего движения (рад/с). */
     n0 = sqrt((double)(GRAV_CONSTANT_GPS/(a*a*a)));
 
 
-    /* Cредняя аномалия (rads). */
     Mk = A->m0 + n0*Tk;
 
-    /* Итерационный расчет эксцентрической аномалии. */
 	Eprev = Mk + e * sin((double)Mk);
     Ek = Mk + e * sin(Eprev);
 
@@ -51,7 +47,6 @@ void GpsAlm::sv_pos_predication(const Time& cur_time, Satellite& sat) const {
         Ek = Mk + e * sin((double)Eprev);
 	}
 
-    /* Расчет истинной аномали (rads). */
 	cek = cos((double)Ek);
     sek = sin((double)Ek);
 	denom = (1-e*cek );
@@ -62,26 +57,20 @@ void GpsAlm::sv_pos_predication(const Time& cur_time, Satellite& sat) const {
 	if (Vk < 0.0E0)
 	Vk = Vk + 2.0*Pi;
 
-    /* Аргумент широты (rads) */
     Fk = Vk + A->w;
 
-    /* Скорректированный аргумент широты (рад) */
     Uk = Fk;
 
-    /* Скорректированный радиус орбиты спутника (рад) */
     Rk = denom * a;
 
-    /* Скорректированная наклонная орбита спутника (рад) */
 	Ik = A->delta_i;
 
     cuk = cos((double)Uk);
     suk = sin((double)Uk);
 
-    /* Координаты спутника в орбитальной плоскости */
     xpk = Rk*cuk;
     ypk = Rk*suk;
 
-    /* Скорректированная долгота восходящего узла(рад) */
     omega_k  = A->omega0 + Tk*(A->omegadot - WGS84_OE) - WGS84_OE * A->toa;
 
     sik = sin((double)Ik);
@@ -90,19 +79,17 @@ void GpsAlm::sv_pos_predication(const Time& cur_time, Satellite& sat) const {
     cok = cos((double)omega_k);
 
 
-    /* Преобразование координат в СК WGS-90 */
 	sat.coord.xs = (double)(xpk*cok - ypk*cik*sok);
     sat.coord.ys = (double)(xpk*sok + ypk*cik*cok);
     sat.coord.zs = (double)(ypk*sik);
 	sat.coord.vflg = true;
 
-	/* Расчет скоростей спутников в СК WGS-90 */
 	p = a*(1 - e*e);
     mup = sqrt((double)(GRAV_CONSTANT_GPS/p));
-	Vr = mup*e*sin(Vk);							// Радиальная составляющая
-    Vu = mup*(1 + e*cos(Vk));					// Тангенсальная составляющая
+	Vr = mup*e*sin(Vk);							
+    Vu = mup*(1 + e*cos(Vk));					
 
-	sat.vel.vxs = (double)(Vr*(cok*cuk - sok*suk*cik) - Vu*(cok*suk + sok*cuk*cik) + WGS84_OE * sat.coord.ys);          // Поправка связанная с вращением Земли
+	sat.vel.vxs = (double)(Vr*(cok*cuk - sok*suk*cik) - Vu*(cok*suk + sok*cuk*cik) + WGS84_OE * sat.coord.ys);         
     sat.vel.vys = (double)(Vr*(sok*cuk + cok*suk*cik) - Vu*(sok*suk - cok*cuk*cik) - WGS84_OE * sat.coord.xs);
     sat.vel.vzs = (double)(Vr*suk*sik + Vu*cuk*sik);
 	sat.vel.vflg = true;
