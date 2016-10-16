@@ -11,35 +11,38 @@ class Strategy {
 
 public:
 	virtual ~Strategy() {}
-	virtual void read_alm(const std::string& name, Almanac* alm) = 0;
+	virtual void readAlmanac(const std::string& fileName, Almanac* almanac) = 0;
 };
 
-class ReadYumaGpsAlm : public Strategy {
+class ReadYumaGpsAlmanac : public Strategy {
 
 public:
-	~ReadYumaGpsAlm() {}
-	void read_alm(const std::string& name, Almanac* alm) override;
+	~ReadYumaGpsAlmanac() override {}
+	void readAlmanac(const std::string& fileName, Almanac* almanac) override;
 };
 
-class ReadGlnAlm : public Strategy {
+class ReadGlnAlmanac : public Strategy {
 
 public:
-	~ReadGlnAlm() {}
-	void read_alm(const std::string& name, Almanac* alm) override;
+	~ReadGlnAlmanac() override {}
+	void readAlmanac(const std::string& fileName, Almanac* almanac) override;
 };
 
 class Almanac {
 
 public:
-	virtual void sv_pos_predication(const Time& cur_time, Satellite& sat) const = 0;
-	void read_alm(const std::string& name) { strategy->read_alm(name, this); }
-	void setStrategy(Strategy* s)
-	{
-		strategy = s;
+	virtual void predicationSatellitePosition(const Time& curTime, Satellite& satellite) const = 0;
+	void readAlmanac(const std::string& fileName) 
+	{ 
+		strategy_->readAlmanac(fileName, this); 
 	}
-private:
-	Strategy* strategy = nullptr;
+	void setStrategy(Strategy* strategy)
+	{
+		strategy_ = strategy;
+	}
 
+private:
+	Strategy* strategy_ = nullptr;
 };
 
 #endif

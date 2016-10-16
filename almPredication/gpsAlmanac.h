@@ -1,10 +1,11 @@
 #ifndef GPS_ALMANAC_H_
 #define GPS_ALMANAC_H_
+#include <vector>
 #include "almanac.h"
 #include "satellite.h"
 
-struct AlmanacGps {
-	AlmanacGps() : vflg(0) {}
+struct SatelliteGpsAlmanac {
+	SatelliteGpsAlmanac() : vflg(0) {}
 	unsigned int	vflg;
 	unsigned int	almHealth;
 	int				refweek;
@@ -20,17 +21,17 @@ struct AlmanacGps {
 	double			af1;
 };
 
-class GpsAlm : public Almanac {
+class GpsAlmanac : public Almanac {
 
 public:
-	GpsAlm() : alm(SatGps::NUM_GPS_SAT) {}
-	void sv_pos_predication(const Time& cur_time, Satellite& sat) const override;
-	AlmanacGps* getAlmByPRN(int prn) { return &alm[prn - 1]; }
+	GpsAlmanac() : almanac(SatGps::NUM_GPS_SAT) {}
+	void predicationSatellitePosition(const Time& curTime, Satellite& satellite) const override;
+	SatelliteGpsAlmanac* getAlmanacByPRN(int prn) { return &almanac[prn - 1]; }
 	static const double 		GRAV_CONSTANT_GPS;
 	static const double			WGS84_OE;
 	static const unsigned int	SECONDS_A_WEEK;
 private:
-	std::vector<AlmanacGps> alm;
+	std::vector<SatelliteGpsAlmanac> almanac;
 };
 
 #endif

@@ -1,10 +1,11 @@
 #ifndef GLONASS_ALMANAC_H_
 #define GLONASS_ALMANAC_H_
+#include <vector>
 #include "almanac.h"
 #include "satellite.h"
 
-struct AlmanacGlon {
-	AlmanacGlon() : vflg(0) {}
+struct SatelliteGlonassAlmanac {
+	SatelliteGlonassAlmanac() : vflg(0) {}
 	unsigned int	vflg;
 	unsigned int	svHealth;
 	unsigned int	Na;
@@ -21,12 +22,12 @@ struct AlmanacGlon {
 	double			deltaT;
 };
 
-class GlonassAlm : public Almanac {
+class GlonassAlmanac : public Almanac {
 
 public:
-	GlonassAlm() : alm(SatGlonass::NUM_GLONASS_SAT) {}
-	void sv_pos_predication(const Time& cur_time, Satellite& sat) const override;
-	AlmanacGlon* getAlmByPRN(int prn) { return &alm[prn - 1]; }
+	GlonassAlmanac() : almanac(SatGlonass::NUM_GLONASS_SAT) {}
+	void predicationSatellitePosition(const Time& curTime, Satellite& satellite) const override;
+	SatelliteGlonassAlmanac* getAlmanacByPRN(int prn) { return &almanac[prn - 1]; }
 	static const double	EARTH_RADIUS_GLON;	// m
 	static const double GRAV_CONSTANT_GLON;	// m^3/s^2
 	static const double	I0;					// rad		
@@ -37,7 +38,7 @@ public:
 
 private:
 
-	std::vector<AlmanacGlon> alm;
+	std::vector<SatelliteGlonassAlmanac> almanac;
 };
 
 #endif
