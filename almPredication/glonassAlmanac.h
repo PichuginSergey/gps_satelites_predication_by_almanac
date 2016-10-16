@@ -25,9 +25,9 @@ struct SatelliteGlonassAlmanac {
 class GlonassAlmanac : public Almanac {
 
 public:
-	GlonassAlmanac() : almanac(SatGlonass::NUM_GLONASS_SAT) {}
+	GlonassAlmanac() : almanac_(SatellitesGlonass::NUMBER_GLONASS_SATELLITE) {}
 	void predicationSatellitePosition(const Time& curTime, Satellite& satellite) const override;
-	SatelliteGlonassAlmanac* getAlmanacByPRN(int prn) { return &almanac[prn - 1]; }
+	SatelliteGlonassAlmanac* getAlmanacByPRN(int prn) { return &almanac_[prn - 1]; }
 	static const double	EARTH_RADIUS_GLON;	// m
 	static const double GRAV_CONSTANT_GLON;	// m^3/s^2
 	static const double	I0;					// rad		
@@ -38,7 +38,7 @@ public:
 
 private:
 
-	std::vector<SatelliteGlonassAlmanac> almanac;
+	std::vector<SatelliteGlonassAlmanac> almanac_;
 };
 
 #endif

@@ -21,10 +21,10 @@ public:
 	void readAlmanac(const std::string& fileName, Almanac* almanac) override;
 };
 
-class ReadGlnAlmanac : public Strategy {
+class ReadGlonassAlmanac : public Strategy {
 
 public:
-	~ReadGlnAlmanac() override {}
+	~ReadGlonassAlmanac() override {}
 	void readAlmanac(const std::string& fileName, Almanac* almanac) override;
 };
 

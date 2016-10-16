@@ -24,14 +24,14 @@ struct SatelliteGpsAlmanac {
 class GpsAlmanac : public Almanac {
 
 public:
-	GpsAlmanac() : almanac(SatGps::NUM_GPS_SAT) {}
+	GpsAlmanac() : almanac_(SatellitesGps::NUMBER_GPS_SATELLITE) {}
 	void predicationSatellitePosition(const Time& curTime, Satellite& satellite) const override;
-	SatelliteGpsAlmanac* getAlmanacByPRN(int prn) { return &almanac[prn - 1]; }
+	SatelliteGpsAlmanac* getAlmanacByPRN(int prn) { return &almanac_[prn - 1]; }
 	static const double 		GRAV_CONSTANT_GPS;
 	static const double			WGS84_OE;
 	static const unsigned int	SECONDS_A_WEEK;
 private:
-	std::vector<SatelliteGpsAlmanac> almanac;
+	std::vector<SatelliteGpsAlmanac> almanac_;
 };
 
 #endif

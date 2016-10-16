@@ -7,32 +7,38 @@
 #include "service.h"
 #include "position.h"
 
-int main(int argc, char* argv[]) {
-	
-	Position_WGS_84 pos;
-	get_cur_pos("position.ini", pos);
-	Time	cur_time;
-	get_current_time(cur_time);
+int main(int argc, char* argv[]) 
+{
+	try
+	{
+		Position_WGS_84 position;
+		get—urrentPosition("position.ini", position);
+		Time	currentTime;
+		getCurrentTime(currentTime);
 
-	GpsAlm almGps;
-	ReadYumaGpsAlm    readYumaGpsAlm;
-	almGps.setStrategy(&readYumaGpsAlm);
-	almGps.read_alm("MCCT_160825.agp");
-	SatGps sat_gps;
+		GpsAlmanac almanacGps;
+		ReadYumaGpsAlmanac    readYumaGpsAlmanac;
+		almanacGps.setStrategy(&readYumaGpsAlmanac);
+		almanacGps.readAlmanac("MCCT_160825.agp");
+		SatellitesGps satellitesGps;
 
-	GlonassAlm almGln;
-	ReadGlnAlm    readGlnAlm;
-	almGln.setStrategy(&readGlnAlm);
-	almGln.read_alm("MCCT_160825.agl");
-	SatGlonass sat_gln;
+		GlonassAlmanac almanacGlonass;
+		ReadGlonassAlmanac readGlonassnAlmanac;
+		almanacGlonass.setStrategy(&readGlonassnAlmanac);
+		almanacGlonass.readAlmanac("MCCT_160825.agl");
+		SatellitesGlonass satellitesGlonass;
 
-	auto alm_pred_gps = std::async(Alm_predication_task(pos, cur_time, almGps, sat_gps));
-	auto alm_pred_gln = std::async(Alm_predication_task(pos, cur_time, almGln, sat_gln));
+		auto gpsAlmanacPredicatonTask = std::async(Alm_predication_task(position, currentTime, almanacGps, satellitesGps));
+		auto glonassAlmanacPredicatonTask = std::async(Alm_predication_task(position, currentTime, almanacGlonass, satellitesGlonass));
 
-	alm_pred_gps.get();
-	display_sat("GPS sat: ", sat_gps, 10);
-	alm_pred_gln.get();
-	display_sat("GLN sat: ", sat_gln, 10);
-
+		const int ELVATION_THRESHOLD{ 10 };
+		gpsAlmanacPredicatonTask.get();
+		displaySatellite("GPS satellites: ", satellitesGps, ELVATION_THRESHOLD);
+		glonassAlmanacPredicatonTask.get();
+		displaySatellite("GLNONASS satellites: ", satellitesGlonass, ELVATION_THRESHOLD);
+	}
+	catch (std::runtime_error& er) {
+		std::cout << er.what() << std::endl;
+	}
 	return 0;
 }

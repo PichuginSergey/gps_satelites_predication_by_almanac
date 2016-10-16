@@ -8,15 +8,15 @@
 
 extern const double		Pi;
 
-extern void pred_sv_param(const Position& pos, 
-				   const Time& cur_time, 
-				   const Almanac& alm, 
-				   GNSS& sat);
-extern void get_current_time(Time& t);
-extern void get_cur_pos (const std::string& file, Position& pos) ;
-extern void  sv_angles(const Position& pos, Satellite& sat);
-extern void display_sat(const std::string& msg, const GNSS& sat, int elv_threshold);
-extern unsigned int data_to_julian(unsigned int day, unsigned int month, unsigned int year);
+extern void predicationSatelliteParametrs(const Position& position,
+				   const Time& currentTime,
+				   const Almanac& almanac,
+				   GNSS& satellites);
+extern void getCurrentTime(Time& currentTime);
+extern void get—urrentPosition(const std::string& file, Position& pos) ;
+extern void calculationSatelliteAngles(const Position& pos, Satellite& sat);
+extern void displaySatellite(const std::string& msg, GNSS& sat, int elv_threshold);
+extern unsigned int convertDateToJulianFormat(unsigned int day, unsigned int month, unsigned int year) noexcept;
 
 class Alm_predication_task {
 
@@ -26,7 +26,7 @@ public:
 		const Almanac& alm,
 		GNSS& satellite) : pos_(pos), cur_time_(cur_time), alm_(alm), satellite_(satellite) {}
 	void operator()() {
-		pred_sv_param(pos_, cur_time_, alm_, satellite_);
+		predicationSatelliteParametrs(pos_, cur_time_, alm_, satellite_);
 	}
 private:
 	const Position& pos_;

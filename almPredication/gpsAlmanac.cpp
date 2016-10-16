@@ -10,7 +10,6 @@ const unsigned int	GpsAlmanac::SECONDS_A_WEEK = 604800;
 
 void GpsAlmanac::predicationSatellitePosition(const Time& curTime, Satellite& satellite) const 
 {
-
 	int wk{0};
 	double sec{0.0};
 
@@ -18,8 +17,8 @@ void GpsAlmanac::predicationSatellitePosition(const Time& curTime, Satellite& sa
 	wk = wk & 0xFF;
 	sec -= 3 * 3600;
 
-	int prn = satellite.get_prn();
-	const SatelliteGpsAlmanac*	oneGpsSatAlmanac = &almanac[prn - 1];
+	int prn = satellite.getPrn();
+	const SatelliteGpsAlmanac*	oneGpsSatAlmanac = &almanac_[prn - 1];
 	if (oneGpsSatAlmanac->vflg == 0)
 		return;
 	double a = oneGpsSatAlmanac->sqrta;
@@ -36,7 +35,7 @@ void GpsAlmanac::predicationSatellitePosition(const Time& curTime, Satellite& sa
 	double Eprev = Mk + e * sin((double)Mk);
 	double Ek = Mk + e * sin(Eprev);
 
-	while (fabs((double)(Ek - Eprev)) > 1e-13) 
+	while (fabs((double)(Ek - Eprev)) > 3e-8)
 	{
 		Eprev = Ek;
 		Ek = Mk + e * sin((double)Eprev);
@@ -73,25 +72,24 @@ void GpsAlmanac::predicationSatellitePosition(const Time& curTime, Satellite& sa
 	double sok = sin((double)omega_k);
 	double cok = cos((double)omega_k);
 
-	satellite.coord.xs = (double)(xpk*cok - ypk*cik*sok);
-	satellite.coord.ys = (double)(xpk*sok + ypk*cik*cok);
-	satellite.coord.zs = (double)(ypk*sik);
-	satellite.coord.vflg = true;
+	satellite.coordinate.xs = (double)(xpk*cok - ypk*cik*sok);
+	satellite.coordinate.ys = (double)(xpk*sok + ypk*cik*cok);
+	satellite.coordinate.zs = (double)(ypk*sik);
+	satellite.coordinate.vflg = true;
 
 	double p = a*(1 - e*e);
 	double mup = sqrt((double)(GRAV_CONSTANT_GPS / p));
 	double Vr = mup*e*sin(Vk);
 	double Vu = mup*(1 + e*cos(Vk));
 
-	satellite.vel.vxs = (double)(Vr*(cok*cuk - sok*suk*cik) - Vu*(cok*suk + sok*cuk*cik) + WGS84_OE * satellite.coord.ys);
-	satellite.vel.vys = (double)(Vr*(sok*cuk + cok*suk*cik) - Vu*(sok*suk - cok*cuk*cik) - WGS84_OE * satellite.coord.xs);
-	satellite.vel.vzs = (double)(Vr*suk*sik + Vu*cuk*sik);
-	satellite.vel.vflg = true;
+	satellite.velocity.vxs = (double)(Vr*(cok*cuk - sok*suk*cik) - Vu*(cok*suk + sok*cuk*cik) + WGS84_OE * satellite.coordinate.ys);
+	satellite.velocity.vys = (double)(Vr*(sok*cuk + cok*suk*cik) - Vu*(sok*suk - cok*cuk*cik) - WGS84_OE * satellite.coordinate.xs);
+	satellite.velocity.vzs = (double)(Vr*suk*sik + Vu*cuk*sik);
+	satellite.velocity.vflg = true;
 }
 
 void ReadYumaGpsAlmanac::readAlmanac(const std::string& fileName, Almanac* almanac) 
 {
-
 	InputFile<std::ifstream> in(fileName.c_str());
 
 	if (!in) {
@@ -102,7 +100,8 @@ void ReadYumaGpsAlmanac::readAlmanac(const std::string& fileName, Almanac* alman
 	GpsAlmanac* alm = dynamic_cast<GpsAlmanac*>(almanac);
 	if (alm == nullptr)
 		throw std::runtime_error("This is not GpsAlm in ReadYumaGpsAlm");
-	for (size_t i = 0; i < SatGps::NUM_GPS_SAT; ++i) {
+	for (size_t i = 0; i < SatellitesGps::NUMBER_GPS_SATELLITE; ++i) 
+	{
 		int day_recive_alm, month_recive_alm, year_recive_alm, time_recive_alm;
 		in >> day_recive_alm >> month_recive_alm >> year_recive_alm >> time_recive_alm;
 

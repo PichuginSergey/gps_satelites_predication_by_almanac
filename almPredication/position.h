@@ -3,28 +3,25 @@
 
 struct Coordinate
 {
-	Coordinate() : vflg(false), xs(0), ys(0), zs(0) {}
-	bool		vflg;
-	double		xs;					// The X coordinate of satellite,		m. 
-	double		ys;					// The Y coordinate of satellite,		m.
-	double		zs;					// The Z coordinate of satellite,		m.
+	bool		vflg{ false };
+	double		xs{ 0.0 };					// The X coordinate of satellite,		m. 
+	double		ys{ 0.0 };					// The Y coordinate of satellite,		m.
+	double		zs{ 0.0 };					// The Z coordinate of satellite,		m.
 };
 
 struct Velocity
 {
-	Velocity() : vflg(false), vxs(0), vys(0), vzs(0) {}
-	bool		vflg;
-	double		vxs;				// The Vx velocity of satellite,		m/s. 
-	double		vys;				// The Vy velocity of satellite,		m/s.  
-	double		vzs;				// The Vz velocity of satellite,		m/s.
+	bool		vflg{ false };
+	double		vxs{ 0.0 };				// The Vx velocity of satellite,		m/s. 
+	double		vys{ 0.0 };				// The Vy velocity of satellite,		m/s.  
+	double		vzs{ 0.0 };				// The Vz velocity of satellite,		m/s.
 };
 
 struct Angle
 {
-	Angle() : vflg(false), elv(0), azi(0) {}
-	bool		vflg;
-	double		elv;				// Elevation angle, rad.				
-	double		azi;				// Azimuth, rad.	
+	bool		vflg{ false };
+	double		elv{ 0.0 };				// Elevation angle, rad.				
+	double		azi{ 0.0 };				// Azimuth, rad.	
 };
 
 class Position {
